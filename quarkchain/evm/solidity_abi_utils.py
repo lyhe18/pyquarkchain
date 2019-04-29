@@ -62,7 +62,7 @@ def tx_to_typed_data(raw_tx):
             "name": "transferTokenId",
             "value": "0x{}".format(int_to_bytes(raw_tx.transfer_token_id).hex()),
         },
-        {"type": "string", "name": "qkcDomain", "value": "bottom-quark"},
+        {"type": "string", "name": "qkcDomain", "value": "singularity"},
     ]
 
 
