@@ -884,6 +884,21 @@ class SubmitWorkResponse(Serializable):
         self.success = success
 
 
+class EchoRequest(Serializable):
+    FIELDS = []
+
+    def __init__(self):
+        pass
+
+
+class EchoResponse(Serializable):
+    FIELDS = [("error_code", uint32), ("result", PrependedSizeBytesSerializer(4))]
+
+    def __init__(self, error_code: int, result: bytes):
+        self.error_code = 0
+        self.result = result
+
+
 CLUSTER_OP_BASE = 128
 
 
@@ -949,6 +964,8 @@ class ClusterOp:
     SUBMIT_WORK_RESPONSE = 58 + CLUSTER_OP_BASE
     ADD_MINOR_BLOCK_HEADER_LIST_REQUEST = 59 + CLUSTER_OP_BASE
     ADD_MINOR_BLOCK_HEADER_LIST_RESPONSE = 60 + CLUSTER_OP_BASE
+    ECHO_REQUEST = 61 + CLUSTER_OP_BASE
+    ECHO_RESPONSE = 62 + CLUSTER_OP_BASE
 
 
 CLUSTER_OP_SERIALIZER_MAP = {
@@ -1011,4 +1028,6 @@ CLUSTER_OP_SERIALIZER_MAP = {
     ClusterOp.SUBMIT_WORK_RESPONSE: SubmitWorkResponse,
     ClusterOp.ADD_MINOR_BLOCK_HEADER_LIST_REQUEST: AddMinorBlockHeaderListRequest,
     ClusterOp.ADD_MINOR_BLOCK_HEADER_LIST_RESPONSE: AddMinorBlockHeaderListResponse,
+    ClusterOp.ECHO_REQUEST: EchoRequest,
+    ClusterOp.ECHO_RESPONSE: EchoResponse,
 }

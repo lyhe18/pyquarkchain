@@ -954,6 +954,10 @@ class JSONRPCServer:
             return quantity_encoder(0)
         return quantity_encoder(root_header_tip.height - root_header.height + 1)
 
+    @public_methods.add
+    async def echo(self):
+        return await self.master.echo()
+
     ######################## Ethereum JSON RPC ########################
 
     @public_methods.add

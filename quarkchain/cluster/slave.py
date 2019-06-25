@@ -32,6 +32,8 @@ from quarkchain.cluster.rpc import (
     SubmitWorkRequest,
     SubmitWorkResponse,
     AddMinorBlockHeaderListRequest,
+    EchoRequest,
+    EchoResponse,
 )
 from quarkchain.cluster.rpc import (
     AddRootBlockResponse,
@@ -518,6 +520,9 @@ class MasterConnection(ClusterConnection):
 
         return SubmitWorkResponse(error_code=0, success=res)
 
+    async def handle_echo(self, req: EchoRequest) -> EchoResponse:
+        return EchoResponse(error_code=0, result=str.encode(self.slave_server.name))
+
 
 MASTER_OP_NONRPC_MAP = {
     ClusterOp.DESTROY_CLUSTER_PEER_CONNECTION_COMMAND: MasterConnection.handle_destroy_cluster_peer_connection_command
@@ -622,6 +627,7 @@ MASTER_OP_RPC_MAP = {
         ClusterOp.SUBMIT_WORK_RESPONSE,
         MasterConnection.handle_submit_work,
     ),
+    ClusterOp.ECHO_REQUEST: (ClusterOp.ECHO_RESPONSE, MasterConnection.handle_echo),
 }
 
 
@@ -1339,7 +1345,10 @@ def main():
     os.chdir(os.path.dirname(os.path.abspath(__file__)))
     env = parse_args()
 
-    slave_server = SlaveServer(env)
+    import random
+
+    name = random.choice(["btc", "eth", "qkc", "xrp", "ltc"])
+    slave_server = SlaveServer(env, name)
     slave_server.start()
     slave_server.do_loop()
 
